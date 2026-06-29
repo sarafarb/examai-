@@ -1,0 +1,54 @@
+<div class="modal-overlay" dir="rtl">
+  <div class="modal-content">
+    <button class="close-btn" (click)="closeModal()">✕</button>
+
+    <div *ngIf="state === 'SETTINGS'" class="settings-view">
+      <h3>{{ mode === 'SINGLE' ? 'ייצוא PDF' : 'ייצוא כל הציונים ל-ZIP' }}</h3>
+      <p>בחר את עיצוב כתב היד עבור הדו"ח:</p>
+
+      <div class="form-group">
+        <label>צבע עט:</label>
+        <select [(ngModel)]="penColor">
+          <option value="Red">אדום (Red)</option>
+          <option value="Blue">כחול (Blue)</option>
+          <option value="Black">שחור (Black)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>סגנון כתב יד:</label>
+        <select [(ngModel)]="handwritingStyle">
+          <option value="Classic">קלאסי (Classic)</option>
+          <option value="Quick Scribble">כתיבה מהירה (Quick Scribble)</option>
+          <option value="Elegant">אלגנטי (Elegant)</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="btn-cancel" (click)="closeModal()">ביטול</button>
+        <button class="btn-primary" (click)="startExport()">התחל ייצוא</button>
+      </div>
+    </div>
+
+    <div *ngIf="state === 'PROCESSING'" class="processing-view text-center">
+      <div class="spinner"></div>
+      <h4>ExamAI יוצר PDF בכתב יד אנושי...</h4>
+      
+      <div class="progress-container" *ngIf="mode === 'BATCH'">
+        <div class="progress-bar" [style.width.%]="progress"></div>
+        <p>{{ progress }}% הושלם</p>
+      </div>
+    </div>
+
+    <div *ngIf="state === 'ERROR'" class="error-view text-center">
+      <div class="error-icon">⚠️</div>
+      <h4>הייצוא נכשל</h4>
+      <p class="error-text">{{ errorMessage }}</p>
+      
+      <div class="actions center">
+        <button class="btn-primary" (click)="resetFlow()">נסה שוב</button>
+      </div>
+    </div>
+
+  </div>
+</div>

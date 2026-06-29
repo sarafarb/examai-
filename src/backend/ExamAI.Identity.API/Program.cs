@@ -21,7 +21,13 @@ var jwtSettings = jwtSettingsSection.Get<JwtSettings>()!;
 // 2. Register DB Context (Using In-Memory for Bootstrap testability)
 builder.Services.AddDbContext<IdentityDbContext>(options =>
     options.UseInMemoryDatabase("IdentityDb"));
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy => policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
 // 3. Register FluentValidation Validators
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddMemoryCache();
@@ -67,7 +73,7 @@ app.UseAuthorization();
 
 // ─── הוספת ה-Middleware לחסימת משתמשים מושעים ───
 app.UseMiddleware<SuspendedUserMiddleware>();
-
+app.UseCors("AllowAngular");
 // Map Endpoints
 app.MapAuthEndpoints();
 app.MapGet("/health", () => Results.Ok("Identity API is live!"));

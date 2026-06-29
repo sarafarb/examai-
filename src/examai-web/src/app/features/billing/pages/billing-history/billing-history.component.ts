@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './billing-history.component.html',
-  styleUrls: ['./billing-history.component.css']
 })
 export class BillingHistoryComponent implements OnInit {
   invoices = [

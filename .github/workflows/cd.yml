@@ -2,11 +2,32 @@ name: ExamAI Continuous Deployment
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main     # Production
+      - develop  # Staging
+
+env:
+  REGISTRY_SERVER: ${{ secrets.REGISTRY_SERVER }}
+  NAMESPACE: examai
 
 jobs:
-  deploy:
+  build-and-push:
+    name: Build & Push Images
     runs-on: ubuntu-latest
+    strategy:
+      # Matrix מאפשר לבנות את כל השירותים במקביל!
+      matrix:
+        include:
+          - name: gateway
+            context: src/backend/
+            dockerfile: src/backend/ExamAI.Gateway/Dockerfile
+            deployment: gateway-deployment
+          - name: identity-api
+            context: src/backend/
+            dockerfile: src/backend/ExamAI.Identity.API/Dockerfile
+            deployment: identity-deployment
+          # הוסיפי כאן את שאר השירותים בעתיד (workers, frontend וכו')
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
@@ -18,20 +39,75 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - name: Build and Push Gateway Image
+    - name: Build and Push Image (${{ matrix.name }})
       uses: docker/build-push-action@v5
       with:
-        context: src/backend/
-        file: src/backend/ExamAI.Gateway/Dockerfile
+        context: ${{ matrix.context }}
+        file: ${{ matrix.dockerfile }}
         push: true
-        tags: ${{ secrets.REGISTRY_SERVER }}/examai-gateway:${{ github.sha }}
+        tags: |
+          ${{ secrets.REGISTRY_SERVER }}/examai-${{ matrix.name }}:${{ github.sha }}
+          ${{ secrets.REGISTRY_SERVER }}/examai-${{ matrix.name }}:latest
+
+  deploy:
+    name: Deploy to Kubernetes
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    
+    # זה החלק שדורש "Manual Approval" בפרודקשן (צריך להגדיר ב-GitHub Settings -> Environments)
+    environment:
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+      
+    strategy:
+      matrix:
+        include:
+          - name: gateway
+            deployment: gateway-deployment
+          - name: identity-api
+            deployment: identity-deployment
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
     - name: Set Kubernetes Context
       uses: azure/k8s-set-context@v4
       with:
         kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-    - name: Deploy to Kubernetes Cluster
+    - name: Apply Base K8s Manifests
+      # אנחנו מריצים את ה-apply הכללי רק פעם אחת (במקרה שמטריצת gateway רצה)
+      if: matrix.name == 'gateway' 
+      run: kubectl apply -k infra/k8s/overlays/${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+
+    - name: Update Image in K8s
       run: |
-        kubectl apply -f infra/k8s/
-        kubectl set image deployment/gateway-deployment gateway=${{ secrets.REGISTRY_SERVER }}/examai-gateway:${{ github.sha }}
+        kubectl set image deployment/${{ matrix.deployment }} ${{ matrix.name }}=${{ secrets.REGISTRY_SERVER }}/examai-${{ matrix.name }}:${{ github.sha }} -n ${{ env.NAMESPACE }}
+
+    - name: Wait for Rollout to Finish
+      run: |
+        kubectl rollout status deployment/${{ matrix.deployment }} -n ${{ env.NAMESPACE }} --timeout=120s
+
+    - name: Run Smoke Tests & Auto-Rollback
+      run: |
+        # המתנה קצרה כדי לראות אם פוד קורס מיד אחרי שעלה
+        sleep 10
+        POD_STATUS=$(kubectl get pods -l app=${{ matrix.name }} -n ${{ env.NAMESPACE }} -o jsonpath="{.items[*].status.phase}")
+        
+        if [[ "$POD_STATUS" == *"Failed"* ]] || [[ "$POD_STATUS" == *"CrashLoopBackOff"* ]]; then
+          echo "🚨 Smoke test failed! Rolling back deployment for ${{ matrix.name }}..."
+          kubectl rollout undo deployment/${{ matrix.deployment }} -n ${{ env.NAMESPACE }}
+          exit 1
+        else
+          echo "✅ Smoke test passed for ${{ matrix.name }}!"
+        fi
+
+    - name: Send Slack Notification
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job
+        text: "Deployment of ${{ matrix.name }} to ${{ github.ref == 'refs/heads/main' && 'Production' || 'Staging' }} finished."
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

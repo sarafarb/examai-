@@ -1,0 +1,113 @@
+<div class="container mx-auto p-6 max-w-4xl" dir="rtl">
+  
+  <div class="flex items-center justify-between mb-8">
+    <div class="flex-1 flex flex-col items-center" [class.opacity-50]="currentStep < 1">
+      <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white mb-2" 
+           [ngClass]="currentStep >= 1 ? 'bg-indigo-600' : 'bg-gray-300'">1</div>
+      <span class="text-sm font-medium">טופס שאלות</span>
+    </div>
+    <div class="flex-1 h-1 bg-gray-200"><div class="h-1 bg-indigo-600 transition-all" [style.width]="currentStep >= 2 ? '100%' : '0%'"></div></div>
+    
+    <div class="flex-1 flex flex-col items-center" [class.opacity-50]="currentStep < 2">
+      <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white mb-2" 
+           [ngClass]="currentStep >= 2 ? 'bg-indigo-600' : 'bg-gray-300'">2</div>
+      <span class="text-sm font-medium">מחוון תשובות</span>
+    </div>
+    <div class="flex-1 h-1 bg-gray-200"><div class="h-1 bg-indigo-600 transition-all" [style.width]="currentStep >= 3 ? '100%' : '0%'"></div></div>
+
+    <div class="flex-1 flex flex-col items-center" [class.opacity-50]="currentStep < 3">
+      <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white mb-2" 
+           [ngClass]="currentStep >= 3 ? 'bg-indigo-600' : 'bg-gray-300'">3</div>
+      <span class="text-sm font-medium">עריכת ציונים</span>
+    </div>
+  </div>
+
+  <div *ngIf="currentStep === 1" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 text-center">
+    <h2 class="text-2xl font-bold mb-4">העלה את טופס הבחינה הרדיק (PDF/תמונה)</h2>
+    
+    <div class="border-2 border-dashed border-gray-300 rounded-xl p-10 hover:bg-gray-50 transition-colors relative">
+      <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" (change)="onTemplateSelected($event)" accept=".pdf,image/*">
+      <div *ngIf="!isUploadingTemplate && extractedQuestions.length === 0">
+        <span class="text-4xl mb-2 block">📄</span>
+        <p class="font-medium text-gray-700">גרור את הקובץ לכאן או לחץ לבחירה</p>
+      </div>
+
+      <div *ngIf="isUploadingTemplate" class="flex flex-col items-center text-indigo-600">
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
+        <p class="font-medium">ה-AI שלנו מעבד את השאלות...</p>
+      </div>
+      
+      <div *ngIf="!isUploadingTemplate && extractedQuestions.length > 0" class="text-green-600">
+        <span class="text-4xl mb-2 block">✅</span>
+        <p class="font-bold">זוהו {{ extractedQuestions.length }} שאלות!</p>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end">
+      <button (click)="nextStep()" [disabled]="extractedQuestions.length === 0" class="px-6 py-2 bg-indigo-600 text-white rounded-lg disabled:bg-indigo-300">המשך לשלב הבא</button>
+    </div>
+  </div>
+
+  <div *ngIf="currentStep === 2" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 text-center">
+    <h2 class="text-2xl font-bold mb-4">העלה את מחוון התשובות שלך</h2>
+    <p class="text-gray-500 mb-6">אנחנו נבנה עבורך את רובריקת הציונים באופן אוטומטי.</p>
+    
+    <div class="border-2 border-dashed border-gray-300 rounded-xl p-10 hover:bg-gray-50 transition-colors relative">
+      <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" (change)="onAnswerKeySelected($event)" accept=".pdf,image/*">
+      
+      <div *ngIf="!isUploadingAnswerKey && rubricItems.length === 0">
+        <span class="text-4xl mb-2 block">🔑</span>
+        <p class="font-medium text-gray-700">גרור את מחוון התשובות לכאן</p>
+      </div>
+
+      <div *ngIf="isUploadingAnswerKey" class="flex flex-col items-center text-orange-600">
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-600 mb-4"></div>
+        <p class="font-medium">ה-AI בונה את טבלת הציונים (רובריקה)...</p>
+      </div>
+
+      <div *ngIf="!isUploadingAnswerKey && rubricItems.length > 0" class="text-green-600">
+        <span class="text-4xl mb-2 block">✅</span>
+        <p class="font-bold">הרובריקה נבנתה בהצלחה!</p>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-between">
+      <button (click)="prevStep()" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg">חזור</button>
+      <button (click)="nextStep()" [disabled]="rubricItems.length === 0" class="px-6 py-2 bg-indigo-600 text-white rounded-lg disabled:bg-indigo-300">המשך לעריכה</button>
+    </div>
+  </div>
+
+  <div *ngIf="currentStep === 3" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+    <h2 class="text-2xl font-bold mb-2">עריכת רובריקת הציונים</h2>
+    <p class="text-gray-500 mb-6 text-sm">תוכל ללחוץ על כל תא כדי לערוך אותו.</p>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-right border-collapse">
+        <thead>
+          <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
+            <th class="p-3">שאלה</th>
+            <th class="p-3">תשובה מרכזית</th>
+            <th class="p-3">תשובות חלופיות מתקבלות</th>
+            <th class="p-3">הערות בודק</th>
+            <th class="p-3 w-20">ניקוד</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of rubricItems" class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="p-3 font-bold text-indigo-600">#{{ item.questionNumber }}</td>
+            <td class="p-3"><input type="text" [(ngModel)]="item.correctAnswer" class="w-full bg-transparent border-b border-dashed border-gray-300 focus:outline-none focus:border-indigo-500"></td>
+            <td class="p-3"><input type="text" [(ngModel)]="item.alternativeAnswers" placeholder="הוסף פסיק בין תשובות" class="w-full bg-transparent border-b border-dashed border-gray-300 focus:outline-none focus:border-indigo-500 text-sm"></td>
+            <td class="p-3"><input type="text" [(ngModel)]="item.gradingNotes" class="w-full bg-transparent border-b border-dashed border-gray-300 focus:outline-none focus:border-indigo-500 text-sm text-gray-500"></td>
+            <td class="p-3"><input type="number" [(ngModel)]="item.points" class="w-full bg-gray-100 rounded px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-8 flex justify-between">
+      <button (click)="prevStep()" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg">חזור</button>
+      <button (click)="saveSetup()" class="px-8 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-colors">שמור והפעל מבחן</button>
+    </div>
+  </div>
+
+</div>

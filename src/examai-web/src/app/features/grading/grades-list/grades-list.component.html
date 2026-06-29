@@ -1,0 +1,15 @@
+<div class="grades-list-container" dir="rtl">
+  <h2>ציוני כיתה</h2>
+  
+  <button (click)="openBatchExportModal()" class="btn-primary">
+    ייצוא כל ציוני הכיתה ל-ZIP
+  </button>
+
+  <app-export-manager 
+    *ngIf="showBatchExportModal" 
+    [mode]="'BATCH'" 
+    [targetId]="classId" 
+    (close)="showBatchExportModal = false">
+  </app-export-manager>
+
+  </div>

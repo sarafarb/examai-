@@ -1,0 +1,9 @@
+[33mafcc5ac[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m)[m HEAD@{0}: reset: moving to HEAD~2
+[33m46595de[m HEAD@{1}: commit: update project2
+[33m43fcc2f[m HEAD@{2}: commit: update project
+[33mafcc5ac[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m)[m HEAD@{3}: commit: 16/06/26
+[33m5a26947[m HEAD@{4}: commit: backend: fix central package management violations in api and worker projects
+[33md4fc9d7[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{5}: checkout: moving from main to develop
+[33md4fc9d7[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{6}: checkout: moving from develop to main
+[33md4fc9d7[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{7}: checkout: moving from main to develop
+[33md4fc9d7[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{8}: commit (initial): infra: initial monorepo structure setup

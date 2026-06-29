@@ -1,0 +1,20 @@
+2026-06-21 13:18:10.897 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-21 13:18:11.040 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-21 13:18:11.042 +03:00 [INF] Hosting environment: Development
+2026-06-21 13:18:11.044 +03:00 [INF] Content root path: C:\Users\User\SARA\exam\src\backend\ExamAI.Analytics.API
+2026-06-21 13:21:55.625 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-21 13:21:55.815 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-21 13:21:55.840 +03:00 [INF] Hosting environment: Development
+2026-06-21 13:21:55.854 +03:00 [INF] Content root path: C:\Users\User\SARA\exam\src\backend\ExamAI.Analytics.API
+2026-06-21 13:35:22.795 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-21 13:35:23.543 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-21 13:35:23.576 +03:00 [INF] Hosting environment: Development
+2026-06-21 13:35:23.609 +03:00 [INF] Content root path: C:\Users\User\SARA\exam\src\backend\ExamAI.Analytics.API
+2026-06-21 17:22:37.934 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-21 17:22:38.088 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-21 17:22:38.096 +03:00 [INF] Hosting environment: Development
+2026-06-21 17:22:38.113 +03:00 [INF] Content root path: C:\Users\User\SARA\exam\src\backend\ExamAI.Analytics.API
+2026-06-21 18:03:15.616 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-21 18:03:15.933 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-21 18:03:16.000 +03:00 [INF] Hosting environment: Development
+2026-06-21 18:03:16.091 +03:00 [INF] Content root path: C:\Users\User\SARA\exam\src\backend\ExamAI.Analytics.API

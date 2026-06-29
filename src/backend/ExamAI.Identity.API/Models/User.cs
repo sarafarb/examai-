@@ -15,4 +15,21 @@ public class User
     public bool IsSuspended { get; set; } = false;
     public string? GoogleId { get; set; } 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // --- שדות חדשים שנוספו עבור משימת GDPR (T-064) ---
+    public string? Status { get; set; }
+    public DateTime? DeletionScheduledAt { get; set; }
+    public string? DeletionReason { get; set; }
+    public bool MarketingConsent { get; set; }
+}
+
+// --- מחלקה חדשה שנוספה עבור תיעוד פעולות (Audit Logs) ---
+[Table("audit_logs", Schema = "identity")]
+public class AuditLog
+{
+    public int Id { get; set; }
+    public Guid UserId { get; set; }
+    public string Action { get; set; } = string.Empty;
+    public string Details { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

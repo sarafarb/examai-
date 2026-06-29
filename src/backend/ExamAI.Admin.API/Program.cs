@@ -6,6 +6,7 @@ using Serilog;
 using Serilog.Formatting.Json;
 using ExamAI.Shared.Logging;
 using ExamAI.Shared.Telemetry;
+using ExamAI.Admin.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 // מוודא שהפרויקט מזהה את ה-DbContext שלכם
@@ -27,6 +28,15 @@ builder.Services.AddTransient<RabbitMqTopologyInitializer>();
 builder.Services.AddDbContext<IdentityDbContext>(options =>
     options.UseNpgsql("Host=localhost;Database=exam_db;Username=postgres;Password=postgres"));
 
+// רישום ה-AdminDbContext במערכת
+builder.Services.AddDbContext<AdminDbContext>(options =>
+    options.UseNpgsql("Host=localhost;Database=exam_db;Username=postgres;Password=postgres"));
+// רישום ה-AdminDbContext במערכת עבור פאנל הניהול
+builder.Services.AddDbContext<AdminDbContext>(options =>
+    options.UseNpgsql("Host=localhost;Database=exam_db;Username=postgres;Password=postgres"));
+
+// רישום Distributed Cache כדי שהקונטרולר של ההגדרות יוכל לנקות את המטמון (T-058)
+builder.Services.AddDistributedMemoryCache();
 // רישום ה-AuditDbContext במערכת (כדי שלא יצעק על זה במיגרציה הבאה)
 builder.Services.AddDbContext<AuditDbContext>(options =>
     options.UseNpgsql("Host=localhost;Database=exam_db;Username=postgres;Password=postgres"));

@@ -18,7 +18,6 @@ export interface Exam {
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './exam-list.component.html',
-  styleUrls: ['./exam-list.component.css']
 })
 export class ExamListComponent implements OnInit {
   exams: Exam[] = [];

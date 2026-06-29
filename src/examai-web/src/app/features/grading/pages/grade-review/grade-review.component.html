@@ -1,0 +1,63 @@
+<div class="flex flex-col md:flex-row h-screen bg-gray-50">
+  
+  <div class="w-full md:w-[60%] h-full relative overflow-auto border-l bg-gray-300 p-4">
+    <div class="relative inline-block shadow-lg bg-white">
+      <img [src]="examImageUrl" alt="Student Exam" class="max-w-none" />
+      
+      <ng-container *ngFor="let ann of annotations">
+        <div 
+          class="absolute font-bold text-2xl cursor-pointer hover:scale-125 transition-transform"
+          [style.left.px]="ann.x" 
+          [style.top.px]="ann.y"
+          [ngClass]="{'text-green-500': ann.isCorrect, 'text-red-500': !ann.isCorrect}"
+          (click)="scrollToQuestion(ann.questionId)">
+          {{ ann.isCorrect ? '✓' : '✗' }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="w-full md:w-[40%] h-full flex flex-col p-6 overflow-y-auto bg-white">
+    
+    <div class="flex justify-between items-center border-b pb-4 mb-4">
+      <div>
+        <h1 class="text-2xl font-bold">{{ studentName }}</h1>
+        <p class="text-gray-500">ID: {{ studentId }}</p>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-extrabold" [ngClass]="getScoreColor(totalScore)">
+          {{ totalScore }} / 100
+        </div>
+        <span class="badge" [ngClass]="totalScore >= 60 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+          {{ totalScore >= 60 ? 'עבר' : 'נכשל' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex-1 space-y-4">
+      <div *ngFor="let q of questionGrades" [id]="'question-' + q.id" class="p-4 border rounded-lg hover:shadow-md transition">
+        <div class="flex justify-between items-start">
+          <h3 class="font-bold">{{ q.questionText }}</h3>
+          <span class="font-bold">{{ q.finalScore }}/{{ q.maxPoints }}</span>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">🤖 {{ q.explanation }}</p>
+        
+        <button mat-stroked-button color="primary" class="mt-3" (click)="openOverrideModal(q)">
+          שנה ציון
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t">
+      <textarea rows="2" class="w-full p-2 border rounded mb-4" placeholder="הערות מורה כלליות..."></textarea>
+      <button *ngIf="gradeStatus === 'approved'" mat-raised-button color="primary" class="w-full py-2 text-lg mb-2" (click)="showExportModal = true">
+  ייצוא PDF בכתב יד
+</button>
+
+<app-export-manager *ngIf="showExportModal" [mode]="'SINGLE'" [targetId]="studentGradeId" (close)="showExportModal = false"></app-export-manager>
+      <button mat-raised-button color="accent" class="w-full py-2 text-lg" (click)="approveGrade()">
+        אשר ציון סופי
+      </button>
+    </div>
+  </div>
+</div>

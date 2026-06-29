@@ -1,0 +1,20 @@
+<div class="max-w-2xl">
+  <h1 class="text-2xl font-bold mb-6">הגדרות מערכת (Key-Value)</h1>
+  <div class="bg-white p-6 rounded shadow space-y-6">
+    
+    <div>
+      <label class="block font-semibold mb-2">AI Confidence Threshold: {{ confidence }}%</label>
+      <input type="range" min="50" max="99" [(ngModel)]="confidence" class="w-full" />
+      <p class="text-sm text-gray-500 mt-1">אחוז הביטחון המינימלי הנדרש מה-AI כדי לאשר בדיקה אוטומטית.</p>
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-2">System Prompt Template</label>
+      <textarea rows="6" [(ngModel)]="prompt" class="w-full border rounded p-3 font-mono text-left" dir="ltr"></textarea>
+    </div>
+
+    <button (click)="handleSave()" class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700">
+      שמור שינויים
+    </button>
+  </div>
+</div>

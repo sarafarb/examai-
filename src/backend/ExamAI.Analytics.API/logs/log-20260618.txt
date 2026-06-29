@@ -1,0 +1,8 @@
+2026-06-18 16:51:22.124 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-18 16:51:22.529 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-18 16:51:22.531 +03:00 [INF] Hosting environment: Development
+2026-06-18 16:51:22.532 +03:00 [INF] Content root path: C:\Users\User\שרה\exam\src\backend\ExamAI.Analytics.API
+2026-06-18 16:54:21.162 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-18 16:54:21.416 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-18 16:54:21.420 +03:00 [INF] Hosting environment: Development
+2026-06-18 16:54:21.422 +03:00 [INF] Content root path: C:\Users\User\שרה\exam\src\backend\ExamAI.Analytics.API

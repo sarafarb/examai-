@@ -1,0 +1,4 @@
+2026-06-20 23:42:52.293 +03:00 [INF] Now listening on: http://localhost:5192
+2026-06-20 23:42:52.568 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-20 23:42:52.577 +03:00 [INF] Hosting environment: Development
+2026-06-20 23:42:52.584 +03:00 [INF] Content root path: C:\Users\User\SARA\exam\src\backend\ExamAI.Analytics.API

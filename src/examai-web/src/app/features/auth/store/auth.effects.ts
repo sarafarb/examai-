@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core'; // <-- הוספנו את inject
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { TokenStorageService } from '../../../core/auth/services/token-storage.service';
@@ -9,6 +9,13 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
+
+  // 1. גלגל ההצלה: מרימים את ההזרקות ישירות לשדות הפרויקט!
+  private actions$ = inject(Actions);
+  private authService = inject(AuthService);
+  private tokenStorage = inject(TokenStorageService);
+  private router = inject(Router);
+
   register$ = createEffect(() => this.actions$.pipe(
     ofType(AuthActions.registerStart),
     mergeMap(action => this.authService.register(action.payload).pipe(
@@ -35,10 +42,6 @@ export class AuthEffects {
     })
   ), { dispatch: false });
 
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private tokenStorage: TokenStorageService,
-    private router: Router
-  ) {}
+  // 2. הבנאי נשאר ריק ונקי, אין יותר בעיות של סדר אתחול
+  constructor() {}
 }

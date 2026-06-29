@@ -10,7 +10,6 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
   standalone: true,
   imports: [CommonModule, RouterModule, SidebarComponent, NavbarComponent, BreadcrumbComponent],
   templateUrl: './app-shell.component.html',
-  styleUrls: ['./app-shell.component.css']
 })
 export class AppShellComponent {
   userRole: 'Teacher' | 'Admin' = 'Teacher';

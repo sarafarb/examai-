@@ -1,0 +1,18 @@
+<div class="review-container" dir="rtl">
+  <h2>סקירת ציון</h2>
+  <p>סטטוס נוכחי: {{ gradeStatus }}</p>
+
+  <button 
+    *ngIf="gradeStatus === 'approved'" 
+    (click)="openExportModal()" 
+    class="btn-primary">
+    ייצוא PDF
+  </button>
+
+  <app-export-manager 
+    *ngIf="showExportModal" 
+    [mode]="'SINGLE'" 
+    [targetId]="studentGradeId" 
+    (close)="showExportModal = false">
+  </app-export-manager>
+</div>

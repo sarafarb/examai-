@@ -7,7 +7,6 @@ import { NotificationComponent } from '../notification/notification.component';
   standalone: true,
   imports: [CommonModule, NotificationComponent],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
   @Input() userName = 'משתמש';

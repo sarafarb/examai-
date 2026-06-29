@@ -592,6 +592,9 @@ public static class AuthEndpoints
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event));
             channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
         }
-        catch { /* פלצבו זמני לבוטסטראפ */ }
+        catch (Exception ex)
+{
+    Console.WriteLine($"[RABBIT ERROR] Failed to publish to {queueName}: {ex}");
+}
     }
 }

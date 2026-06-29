@@ -1,114 +1,78 @@
 ﻿version: '3.8'
 
 services:
-
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    command: ["--config=/etc/otel-collector-config.yaml"]
-    volumes:
-      - ./infra/telemetry/otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    ports:
-      - "4317:4317"   # OTLP gRPC receiver
-      - "4318:4318"   # OTLP HTTP receiver
-      - "8889:8889"   # Prometheus metrics exporter metrics
-
-  # בסיס הנתונים למדדים (Metrics)
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./infra/telemetry/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-
-  # מערכת התצוגה הגרפית (Dashboards)
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    depends_on:
-      - prometheus
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16
     container_name: examai_postgres
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      - POSTGRES_USER=examai
+      - POSTGRES_PASSWORD=examai_local
+      - POSTGRES_DB=examai
     volumes:
       - pg_data:/var/lib/postgresql/data
-    restart: unless-stopped
 
   redis:
-    image: redis:7.2-alpine
+    image: redis:7.2
     container_name: examai_redis
     ports:
-      - "${REDIS_PORT}:6379"
+      - "6379:6379"
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
-    restart: unless-stopped
 
   rabbitmq:
-    image: rabbitmq:3.13-management-alpine
+    image: rabbitmq:3.13-management
     container_name: examai_rabbitmq
     ports:
-      - "${RABBITMQ_PORT}:5672"
-      - "${RABBITMQ_MGMT_PORT}:15672"
+      - "5672:5672"
+      - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_USER=examai
+      - RABBITMQ_DEFAULT_PASS=examai_local
     volumes:
       - rabbit_data:/var/lib/rabbitmq
-    restart: unless-stopped
 
   minio:
-    image: minio/minio:RELEASE.2024-01-11T05-49-40Z
+    image: minio/minio
     container_name: examai_minio
     ports:
-      - "${MINIO_API_PORT}:9000"
-      - "${MINIO_CONSOLE_PORT}:9001"
+      - "9000:9000"
+      - "9001:9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      - MINIO_ROOT_USER=examai
+      - MINIO_ROOT_PASSWORD=examai_local
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
-    restart: unless-stopped
 
   elasticsearch:
-    image: elasticsearch:8.12.0
+    image: elasticsearch:8.11.1
     container_name: examai_elasticsearch
     ports:
-      - "${ELASTICSEARCH_PORT}:9200"
+      - "9200:9200"
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - es_data:/usr/share/elasticsearch/data
-    restart: unless-stopped
 
   seq:
     image: datalust/seq:latest
     container_name: examai_seq
     ports:
-      - "${SEQ_PORT}:80"
+      - "5341:5341"
     environment:
       - ACCEPT_EULA=Y
     volumes:
       - seq_data:/data
-    restart: unless-stopped
 
   clamav:
     image: clamav/clamav:latest
     container_name: examai_clamav
     ports:
-      - "${CLAMAV_PORT}:3310"
-    restart: unless-stopped
+      - "3310:3310"
 
 volumes:
   pg_data:

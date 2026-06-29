@@ -1,0 +1,55 @@
+<div class="upload-container">
+  <h2>העלאת מבחן תלמיד</h2>
+  
+  <div class="alert alert-warning" *ngIf="freePagesLeft > 0">
+    <strong>תוכנית חינמית:</strong> נשארו לך עוד {{ freePagesLeft }} עמודים ללא עלות.
+  </div>
+
+  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label>שם התלמיד *</label>
+      <input type="text" formControlName="studentName" class="form-control" placeholder="הכנס שם מלא">
+    </div>
+
+    <div class="form-group">
+      <label>מזהה תלמיד (ת.ז) - אופציונלי</label>
+      <input type="text" formControlName="studentId" class="form-control" placeholder="הכנס תעודת זהות">
+    </div>
+
+    <div class="drop-zone" 
+         [class.dragging]="isDragging"
+         (dragover)="onDragOver($event)" 
+         (dragleave)="onDragLeave($event)" 
+         (drop)="onDrop($event)">
+      <p>גרור קובצי PDF או ZIP לכאן, או</p>
+      <input type="file" multiple accept=".pdf,.zip" (change)="onFileSelected($event)" #fileInput hidden>
+      <button type="button" class="btn btn-secondary" [disabled]="isUploading" (click)="fileInput.click()">בחר קבצים</button>
+    </div>
+
+    <div class="file-list" *ngIf="selectedFiles.length > 0">
+      <h4>קבצים שנבחרו:</h4>
+      <ul>
+        <li *ngFor="let file of selectedFiles; let i = index">
+          <div class="file-info">
+            <span>{{ file.name }}</span>
+            <button type="button" class="btn-remove" [disabled]="isUploading" (click)="removeFile(i)">X</button>
+          </div>
+          
+          <div class="progress-container" *ngIf="isUploading || uploadProgress[file.name] > 0">
+            <progress [value]="uploadProgress[file.name]" max="100"></progress>
+            <span class="progress-text">{{ uploadProgress[file.name] }}%</span>
+          </div>
+        </li>
+      </ul>
+      
+      <p class="page-summary">
+        סה"כ עמודים לחיוב: <strong>{{ totalPagesToUpload }}</strong>
+      </p>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="uploadForm.invalid || selectedFiles.length === 0 || isUploading">
+      {{ isUploading ? 'מעלה במקביל...' : 'העל את המבחנים' }}
+    </button>
+  </form>
+</div>

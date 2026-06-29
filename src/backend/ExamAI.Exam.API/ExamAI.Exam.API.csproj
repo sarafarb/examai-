@@ -6,8 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
+ <ItemGroup>
     <PackageReference Include="AWSSDK.S3" />
+    <PackageReference Include="FluentValidation.AspNetCore" />
+    <PackageReference Include="HtmlSanitizer" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
   </ItemGroup>
 
 </Project>

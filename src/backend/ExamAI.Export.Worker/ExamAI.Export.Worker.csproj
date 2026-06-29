@@ -3,6 +3,13 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+  <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="QuestPDF" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExamAI.Shared\ExamAI.Shared.csproj" />
+    <ProjectReference Include="..\ExamAI.Grading.Worker\ExamAI.Grading.Worker.csproj" />
   </ItemGroup>
 </Project>

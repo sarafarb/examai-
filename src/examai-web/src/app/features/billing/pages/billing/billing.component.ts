@@ -7,7 +7,6 @@ import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './billing.component.html',
-  styleUrls: ['./billing.component.css']
 })
 export class BillingComponent implements OnInit {
   // נתוני דמה (יגיעו מה-API)

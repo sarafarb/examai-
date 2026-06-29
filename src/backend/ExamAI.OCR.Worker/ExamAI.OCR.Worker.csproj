@@ -3,6 +3,17 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" />
+    <PackageReference Include="Docnet.Core" />
+    
+    <PackageReference Include="MassTransit" VersionOverride="8.3.3" />
+    <PackageReference Include="MassTransit.RabbitMQ" VersionOverride="8.3.3" />
+    
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="OpenCvSharp4" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" />
+    <PackageReference Include="PdfiumViewer.Native.x86_64.v8-xfa" />
+    <PackageReference Include="RabbitMQ.Client" />
+    <PackageReference Include="Tesseract" />
   </ItemGroup>
 </Project>

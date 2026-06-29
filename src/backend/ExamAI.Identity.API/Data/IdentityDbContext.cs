@@ -13,4 +13,7 @@ public class IdentityDbContext : DbContext
     public DbSet<EmailVerification> EmailVerifications => Set<EmailVerification>();
     public DbSet<UserSession> Sessions => Set<UserSession>();
     public DbSet<PasswordReset> PasswordResets => Set<PasswordReset>();
+    
+    // --- טבלה חדשה שנוספה עבור משימת GDPR (T-064) ---
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 }
