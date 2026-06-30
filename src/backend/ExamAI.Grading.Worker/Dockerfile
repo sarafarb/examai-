@@ -5,10 +5,10 @@ WORKDIR /src
 # העתקת קבצי הפרוג'קט ופתרון תלויות מרכזי (Cache שכבה)
 COPY ["src/backend/Directory.Packages.props", "./"]
 COPY ["src/backend/ExamAI.Shared/ExamAI.Shared.csproj", "src/backend/ExamAI.Shared/"]
-COPY ["src/backend/ExamAI.Gateway/ExamAI.Gateway.csproj", "src/backend/ExamAI.Gateway/"]
+COPY ["src/backend/ExamAI.Grading.Worker/ExamAI.Grading.Worker.csproj", "src/backend/ExamAI.Grading.Worker/"]
 
 # שים לב ששינינו כאן ל-Gateway
-RUN dotnet restore "src/backend/ExamAI.Gateway/ExamAI.Gateway.csproj"
+RUN dotnet restore "src/backend/ExamAI.Grading.Worker/ExamAI.Grading.Worker.csproj"
 
 # העתקת שאר הקוד וביצוע פבליש
 COPY . .
@@ -33,5 +33,5 @@ ENV ASPNETCORE_URLS=http://+:8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
 
-# שים לב ששינינו את ה-dll ל-Gateway
-ENTRYPOINT ["dotnet", "ExamAI.Gateway.dll"]
+# שים לב ששינינו את ה-dll ל-Grading.Worker
+ENTRYPOINT ["dotnet", "ExamAI.Grading.Worker.dll"]

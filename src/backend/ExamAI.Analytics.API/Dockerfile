@@ -5,16 +5,16 @@ WORKDIR /src
 # העתקת קבצי הפרוג'קט ופתרון תלויות מרכזי (Cache שכבה)
 COPY ["src/backend/Directory.Packages.props", "./"]
 COPY ["src/backend/ExamAI.Shared/ExamAI.Shared.csproj", "src/backend/ExamAI.Shared/"]
-COPY ["src/backend/ExamAI.Gateway/ExamAI.Gateway.csproj", "src/backend/ExamAI.Gateway/"]
+COPY ["src/backend/ExamAI.Analytics.API/ExamAI.Analytics.API.csproj", "src/backend/ExamAI.Analytics.API/"]
 
 # שים לב ששינינו כאן ל-Gateway
-RUN dotnet restore "src/backend/ExamAI.Gateway/ExamAI.Gateway.csproj"
+RUN dotnet restore "src/backend/ExamAI.Analytics.API/ExamAI.Analytics.API.csproj"
 
 # העתקת שאר הקוד וביצוע פבליש
 COPY . .
 # שים לב ששינינו את תיקיית העבודה ל-Gateway
-WORKDIR "/src/src/backend/ExamAI.Gateway"
-RUN dotnet publish "ExamAI.Gateway.csproj" -c Release -o /app/publish /p:UseAppHost=false
+WORKDIR "/src/src/backend/ExamAI.Analytics.API"
+RUN dotnet publish "ExamAI.Analytics.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS runtime
@@ -34,4 +34,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
 
 # שים לב ששינינו את ה-dll ל-Gateway
-ENTRYPOINT ["dotnet", "ExamAI.Gateway.dll"]
+ENTRYPOINT ["dotnet", "ExamAI.Analytics.API.dll"]
