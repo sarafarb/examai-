@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 WORKDIR /src
 
 # העתקת קבצי הפרוג'קט ופתרון תלויות מרכזי
-COPY ["Directory.Packages.props", "./"]
+COPY ["src/backend/Directory.Packages.props", "./"]
 COPY ["src/backend/ExamAI.Shared/ExamAI.Shared.csproj", "src/backend/ExamAI.Shared/"]
 COPY ["src/backend/ExamAI.Identity.API/ExamAI.Identity.API.csproj", "src/backend/ExamAI.Identity.API/"]
 
