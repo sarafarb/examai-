@@ -18,11 +18,11 @@ jobs:
       matrix:
         include:
           - name: gateway
-            context: src/backend/
+            context: .
             dockerfile: src/backend/ExamAI.Gateway/Dockerfile
             deployment: gateway-deployment
           - name: identity-api
-            context: src/backend/
+            context: .
             dockerfile: src/backend/ExamAI.Identity.API/Dockerfile
             deployment: identity-deployment
           # הוסיפי כאן את שאר השירותים בעתיד (workers, frontend וכו')
