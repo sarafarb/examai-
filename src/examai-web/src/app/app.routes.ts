@@ -38,7 +38,7 @@ export const routes: Routes = [
       { path: 'exams/:id/setup', component: ExamSetupComponent },
       { path: 'billing', component: BillingComponent },
       { path: 'billing/history', component: BillingHistoryComponent },
-
+      
       // ✨ התוספת החדשה: נתיבי הציונים והייצוא (טוען אותם בצורה חכמה - Lazy Loading)
       {
         path: 'grades',
@@ -55,7 +55,6 @@ export const routes: Routes = [
           }
         ]
       }
-      
     ]
   },
 
